@@ -88,51 +88,6 @@ def main(args: argparse.Namespace = None):
     if args.wandb:
         wandb.init(project="GraphSSL", config=args)
 
-    if args.read_split_dataset:
-        root = f'{args.path}/train'
-        signals_dir = f'{root}/signals'
-        arrays_dir = f'{root}/arrays'
-        angles_dir = f'{root}/sources'
-
-        train_dataset = InMemoryGraphDataset(root = root, signals_dir = signals_dir, arrays_dir = arrays_dir, angles_dir = angles_dir, signal_method= args.signal_processing, edge_method=args.edge_processing)
-        train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
-
-        root = f'{args.path}/test'
-        signals_dir = f'{root}/signals'
-        arrays_dir = f'{root}/arrays'
-        angles_dir = f'{root}/sources'
-
-        test_dataset = InMemoryGraphDataset(root = root, signals_dir = signals_dir, arrays_dir = arrays_dir, angles_dir = angles_dir, signal_method= args.signal_processing, edge_method=args.edge_processing)
-        test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False)
-
-        num_samples = np.shape(train_dataset[0].x)[1]
-        print(f"Number of samples: {num_samples}")
-
-        num_mics = np.shape(train_dataset[0].x)[0]
-        print(f"Number of microphones: {num_mics}")
-
-        edge_dim = np.shape(train_dataset[0].edge_attr)[1]
-        print(f"Edge dimension: {edge_dim}")
-
-        print(f"Train size: {len(train_dataset)}, Test size: {len(test_dataset)}")
-
-    else:
-        root = f'{args.path}'
-        signals_dir = f'{root}/signals'
-        arrays_dir = f'{root}/arrays'
-        angles_dir = f'{root}/sources'
-
-        dataset = InMemoryGraphDataset(root = root, signals_dir = signals_dir, arrays_dir = arrays_dir, angles_dir = angles_dir, signal_method= args.signal_processing, edge_method=args.edge_processing)
-
-        train_size = int(0.75 * len(dataset))
-        test_size = len(dataset) - train_size
-
-        print(f"Train size: {train_size}, Test size: {test_size}")
-        train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
-
-        train_dataloader = DataLoader(dataset = train_dataset, batch_size = args.batch_size, shuffle = True, num_workers = args.num_workers)
-        test_dataloader = DataLoader(dataset = test_dataset, batch_size = args.batch_size, shuffle = False, num_workers = args.num_workers)
-    
     if args.validate:
         root = f'{args.path}/validation'
         signals_dir = f'{root}/signals'
@@ -144,6 +99,52 @@ def main(args: argparse.Namespace = None):
         loader_workers = 0 if (args.parallel_backend == 'processes' and args.n_jobs and args.n_jobs > 1) else args.num_workers
         validation_dataloader = DataLoader(validation_dataset, batch_size=args.batch_size, shuffle=False, num_workers=loader_workers)
         print(f"Validation size: {len(validation_dataset)}")
+    
+    else:
+        if args.read_split_dataset:
+            root = f'{args.path}/train'
+            signals_dir = f'{root}/signals'
+            arrays_dir = f'{root}/arrays'
+            angles_dir = f'{root}/sources'
+
+            train_dataset = InMemoryGraphDataset(root = root, signals_dir = signals_dir, arrays_dir = arrays_dir, angles_dir = angles_dir, signal_method= args.signal_processing, edge_method=args.edge_processing)
+            train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
+
+            root = f'{args.path}/test'
+            signals_dir = f'{root}/signals'
+            arrays_dir = f'{root}/arrays'
+            angles_dir = f'{root}/sources'
+
+            test_dataset = InMemoryGraphDataset(root = root, signals_dir = signals_dir, arrays_dir = arrays_dir, angles_dir = angles_dir, signal_method= args.signal_processing, edge_method=args.edge_processing)
+            test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False)
+
+            num_samples = np.shape(train_dataset[0].x)[1]
+            print(f"Number of samples: {num_samples}")
+
+            num_mics = np.shape(train_dataset[0].x)[0]
+            print(f"Number of microphones: {num_mics}")
+
+            edge_dim = np.shape(train_dataset[0].edge_attr)[1]
+            print(f"Edge dimension: {edge_dim}")
+
+            print(f"Train size: {len(train_dataset)}, Test size: {len(test_dataset)}")
+
+        else:
+            root = f'{args.path}'
+            signals_dir = f'{root}/signals'
+            arrays_dir = f'{root}/arrays'
+            angles_dir = f'{root}/sources'
+
+            dataset = InMemoryGraphDataset(root = root, signals_dir = signals_dir, arrays_dir = arrays_dir, angles_dir = angles_dir, signal_method= args.signal_processing, edge_method=args.edge_processing)
+
+            train_size = int(0.75 * len(dataset))
+            test_size = len(dataset) - train_size
+
+            print(f"Train size: {train_size}, Test size: {test_size}")
+            train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+
+            train_dataloader = DataLoader(dataset = train_dataset, batch_size = args.batch_size, shuffle = True, num_workers = args.num_workers)
+            test_dataloader = DataLoader(dataset = test_dataset, batch_size = args.batch_size, shuffle = False, num_workers = args.num_workers)
 
     estimated_azimuths = []
     estimated_elevations = []

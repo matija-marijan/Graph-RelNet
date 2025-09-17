@@ -123,7 +123,15 @@ def fetch_timit_signal(signal_duration: float = 0.1, fs: float = 16000, num_samp
     tqdm.write(f"Read file: {wav_path}")
     tqdm.write(f"Read samples: {start}:{end}")
 
-    return data[start:end].astype(float)
+    segment = data[start:end].astype(float)
+
+    # Normalize to zero mean and unit variance (comparable to randn)
+    segment = segment - np.mean(segment)
+    std = np.std(segment)
+    if std > 0:
+        segment = segment / std
+
+    return segment
 
 # Example usage
 if __name__ == "__main__":
@@ -131,7 +139,8 @@ if __name__ == "__main__":
     fs = 1000  # 1000 Hz
 
     # signal = generate_random_signal(t, fs)
-    signal = fetch_timit_signal(signal_duration=t, fs=fs, num_samples=1024, idx = 1, sample_idx = 10)
+    signal = fetch_timit_signal(signal_duration=t, fs=fs, num_samples=1024, idx = None, sample_idx = 10)
+    # signal = generate_random_signal(t, fs, 1024)  
 
     print(len(signal))
     print(max(signal))

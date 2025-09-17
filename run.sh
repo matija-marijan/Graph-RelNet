@@ -5,7 +5,7 @@ set -euo pipefail
 export TQDM_DISABLE=1
 MAX_JOBS=3                      # how many trainings in parallel after seed0
 LOGDIR="logs"
-SNRS=(100 30 5 0 -5 -10)
+SNRS=(60 30 5 0 -5)
 SEEDS_REST=(1 2 3 4)            # seed 0 is the "first" one we wait on
 mkdir -p "$LOGDIR"
 
@@ -53,7 +53,7 @@ run_snr_block () {
     --signal_type random --num_samples 1024 --array_type random --seed 42 \
     --SNR "$snr" --sampling_frequency 16000 &
   python create_dataset.py --num_arrays 5 --num_signals 20 --num_angles 50 \
-    --signal_type timit --num_samples 1024 --array_type random --seed 42 \
+    --signal_type timit --num_samples 1024 --array_type random --seed 43 \
     --validation --SNR "$snr" --sampling_frequency 16000 &
   wait_all
   echo "[INFO] Datasets ready for SNR ${snr}."

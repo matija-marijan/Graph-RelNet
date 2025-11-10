@@ -66,9 +66,11 @@ def parsing():
     parser.add_argument('--wandb', action='store_true', default=False,
                         help="Use Weights & Biases for logging (default: False).")
     parser.add_argument('--save', action='store_true', default=False,
-                        help="Save results to a .csv file (default: False)")
+                        help="Save results and plots to a file (default: False)")
     parser.add_argument('--description', type=str, default = None,
-                        help="Add context to results being saved (default: None)")
+                        help="Add context to results being saved or plotted (default: None)")
+    parser.add_argument('--plot', action='store_true', default=False,
+                        help="Plot scatter plots of estimated vs true angles (default: False).")
     
     parser.add_argument('--signal_processing', type=str, choices=['none', 'raw', 'fft', 'fft_magnitude', 'fft_phase', 'stft', 'stft_magnitude', 'stft_phase'], default='raw',
                         help="Signal processing method: [none, raw, fft, fft_magnitude, fft_phase, stft, stft_magnitude, stft_phase] (default: raw).")
@@ -227,7 +229,8 @@ def main(args: argparse.Namespace = None):
             tqdm.write(f"Results CSV written to {csv_dir}")
         except Exception as e:
             tqdm.write(f"Failed to write results CSV: {e}")
-        
+        plot_source(true_angles, estimated_angles, save=True, plot=args.plot, description=f"{args.description}_val", maae=maae, az_maae=az_maae, el_maae=el_maae)
+
 if __name__ == '__main__':
     args = parsing()
     main(args)

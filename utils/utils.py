@@ -82,7 +82,7 @@ def plot_source(ground_truth, prediction, convert_to_cartesian: bool = False, de
     plt.grid(True)
     plt.axhline(0, color='black', linewidth=0.5)
     plt.axvline(0, color='black', linewidth=0.5)
-    plt.legend()
+    plt.legend(loc='lower right')
 
     # Scatter plot of azimuth
     plt.subplot(1, 3, 2)
@@ -111,10 +111,10 @@ def plot_source(ground_truth, prediction, convert_to_cartesian: bool = False, de
     plt.suptitle(f'{description}')
 
     plt.tight_layout()
-    if plot:
-        plt.show()
     if save:
         plt.savefig(f'results/plots/{description}.png')
+    if plot:
+        plt.show()
     plt.close()
 
     # TODO: plot correlation between true and predicted azimuth and elevation

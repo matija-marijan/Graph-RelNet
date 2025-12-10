@@ -1,5 +1,9 @@
 # Graph-RelNet
-Graph-RelNet is the official implementation for the paper "Message Passing Neural Networks for Sound Source Localization" presented at the TELFOR 2025 conference. This repository provides code for training graph neural networks (GNNs) on sound source localization tasks, supporting experiments with various microphone array geometries, synthetic and real audio signals, and deep learning models RelNet and Graph-RelNet. The RelNet model is adapted from [GNN_SSL](https://github.com/egrinstein/gnn_ssl/).
+This repository contains the implementation for the paper:
+
+ "Message Passing Neural Networks for Sound Source Localization", Matija Marijan, Miloš Bjelić, presented at the 33rd Telecommunications Forum (TELFOR), Belgrade, Serbia, 2025. 
+ 
+ This repository provides code for training graph neural networks (GNNs) on sound source localization tasks, supporting experiments with various microphone array geometries, synthetic and real audio signals, and deep learning models RelNet and Graph-RelNet. The RelNet model is adapted from [GNN_SSL](https://github.com/egrinstein/gnn_ssl/).
 
 ## Directory Structure
 
